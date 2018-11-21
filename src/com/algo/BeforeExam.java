@@ -10,6 +10,9 @@ import java.util.StringTokenizer;
  */
 public class BeforeExam {
 
+    private static int[][] memoizePoss = new int[300][300];
+
+
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -51,10 +54,13 @@ public class BeforeExam {
         if ( day > totalDays || sumTime < 0 )
             return false;
 
+        if( memoizePoss[sumTime][day] != 0 )
+            return true;
 
         for(int time = minTimes[day-1];time <= maxTimes[day-1];time++ ){
             actualOrder[day-1] = time;
-            if( time == sumTime|| checkPossibility(sumTime - time,totalDays,day+1,minTimes,maxTimes, actualOrder)) {
+            if( time == sumTime || checkPossibility(sumTime - time,totalDays,day+1,minTimes,maxTimes, actualOrder)) {
+                memoizePoss[sumTime][day] = 1;
                 return true;
             }
         }
