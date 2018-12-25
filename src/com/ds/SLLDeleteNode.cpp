@@ -36,26 +36,16 @@ class SinglyLinkedList {
         }
 };
 
-SinglyLinkedListNode* insertNodeAtPosition(SinglyLinkedListNode* head, int data, int pos) {
-    SinglyLinkedListNode * node = new SinglyLinkedListNode(data);
-    if(pos==0){
-        node->next = head;
-        head = node;
-        return head;
-    }
-    else{
-        SinglyLinkedListNode * curr = head, * prev = nullptr;
-        while(pos > 0 && curr != nullptr ){
-            prev = curr;
-            curr = curr->next;
-            pos--;
+void print_singly_linked_list(SinglyLinkedListNode* node, string sep, ofstream& fout) {
+    while (node) {
+        fout << node->data;
+
+        node = node->next;
+
+        if (node) {
+            fout << sep;
         }
-        node->next = curr;
-        prev->next = node;
     }
-
-    return head;
-
 }
 
 void free_singly_linked_list(SinglyLinkedListNode* node) {
@@ -67,15 +57,27 @@ void free_singly_linked_list(SinglyLinkedListNode* node) {
     }
 }
 
-void printLinkedList(SinglyLinkedListNode* head) {
-    while(head != NULL){
-        cout<<head->data<<endl;
+SinglyLinkedListNode* deleteNode(SinglyLinkedListNode* head, int position) {
+    if(position==0){
+        SinglyLinkedListNode * temp = head;
         head = head->next;
+        return head;
     }
-
+    else{
+        SinglyLinkedListNode * curr = head, * prev = nullptr;
+        while(position > 0 && curr != nullptr ){
+            prev = curr;
+            curr = curr->next;
+            position--;
+        }
+        prev->next = (curr!=nullptr)?curr->next:nullptr;
+    }
+    return head;
 }
 
-int main() {
+int main(){
+    ofstream fout(getenv("OUTPUT_PATH"));
+
     SinglyLinkedList* llist = new SinglyLinkedList();
 
     int llist_count;
@@ -90,7 +92,18 @@ int main() {
         llist->insert_node(llist_item);
     }
 
-    printLinkedList(llist->head);
+    int position;
+    cin >> position;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    SinglyLinkedListNode* llist1 = deleteNode(llist->head, position);
+
+    print_singly_linked_list(llist1, " ", fout);
+    fout << "\n";
+
+    free_singly_linked_list(llist1);
+
+    fout.close();
 
     return 0;
 }
