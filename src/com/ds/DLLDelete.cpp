@@ -86,10 +86,10 @@ DoublyLinkedListNode* insertNodeAtHead(DoublyLinkedListNode* head, int data) {
 
 DoublyLinkedListNode* insertNodeAtPosition(DoublyLinkedListNode* head, int data,int pos) {
     DoublyLinkedListNode * node = new DoublyLinkedListNode(data);
-    if(pos==0{
-        node->next = head;
-        head->prev = node;
+    if(head==nullptr){
         head = node;
+        head->next = nullptr;
+        head->prev = nullptr;
         return head;
     }
     DoublyLinkedListNode *curr = head, *prev=nullptr;
@@ -106,6 +106,32 @@ DoublyLinkedListNode* insertNodeAtPosition(DoublyLinkedListNode* head, int data,
     if(curr!=nullptr){
         curr->prev = node;
     }
+
+    return head;
+}
+
+
+DoublyLinkedListNode* deleteNodeAtPosition(DoublyLinkedListNode* head,int pos) {
+    if(pos==0){
+        DoublyLinkedListNode* temp = head;
+        head = head->next;
+        head->prev = nullptr;
+
+        free(temp);
+        return head;
+    }
+    DoublyLinkedListNode *curr = head, *prev=nullptr;
+    while(pos > 0 && curr!=nullptr){
+        prev = curr;
+        curr = curr->next;
+        pos--;
+    }
+    prev->next = curr->next;
+    if(curr->next != nullptr){
+        curr->next->prev = prev;
+    }
+
+    free(curr);
 
     return head;
 }
@@ -129,6 +155,12 @@ int main() {
       	llist->head = llist_head;
     }
 
+
+    //print_doubly_linked_list(llist->head, "\n", cout);
+    //cout << "\n";
+
+    DoublyLinkedListNode* llist_head = deleteNodeAtPosition(llist->head,2);
+    llist->head = llist_head;
 
     print_doubly_linked_list(llist->head, "\n", cout);
     cout << "\n";
